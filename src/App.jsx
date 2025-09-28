@@ -1,31 +1,38 @@
 import AddTask from "./components/AddTask";
 import Tasks from "./components/Tasks";
 import "./App.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
+import Title from "./components/title";
 
 function App() {
-  const [tasks, setTasks] = useState([
-    {
-      id: 1,
-      title: "Estudar Programação",
-      description:
-        "Estudar Programaçõa para se tornar um desenvolvedor full stack.",
-      isCompleted: false,
-    },
-    {
-      id: 2,
-      title: "Estudar inglês",
-      description: "Estudar inglês para se tornar fluente.",
-      isCompleted: false,
-    },
-    {
-      id: 3,
-      title: "Ler um Livro",
-      description: "ler algum livro",
-      isCompleted: false,
-    },
-  ]);
+  const [tasks, setTasks] = useState(
+    JSON.parse(localStorage.getItem("tasks")) || []
+  );
+
+  useEffect(() => {
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+  }, [tasks]);
+
+  // useEffect(() => {
+  //   async function fetchTasks() {
+  //     // Chamar a API
+  //     const res = await fetch(
+  //       "https://jsonplaceholder.typicode.com/todos?_limit=3",
+  //       {
+  //         method: "GET",
+  //       }
+  //     );
+
+  //     // Pegar os dados que ela retorna
+  //     const data = await res.json();
+
+  //     // Armazenar/persistir esses no STATE
+  //     setTasks(data);
+  //   }
+  //   // Se quiser, você pode chamar uma API para pegar as Tarefas
+  //   // fetchTasks();
+  // }, []);
 
   function onTaskClick(taskID) {
     // Pega o id
@@ -61,9 +68,7 @@ function App() {
   return (
     <div className="w-screen h-screen bg-slate-500 flex justify-center p-6">
       <div className="w-[500px] space-y-4">
-        <h1 className="text-3xl text-slate-100 font-bold text-center">
-          Gerenciador de Tasks
-        </h1>
+        <Title>Gerenciador de Tasks</Title>
         <AddTask onAddTaskSubmit={onAddTaskSubmit} />
         <Tasks
           tasks={tasks}
